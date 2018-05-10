@@ -1,0 +1,1 @@
+*   realy coool... [ref2][Some Cool Site2](https://www.site2.pl)
