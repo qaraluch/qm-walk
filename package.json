@@ -1,0 +1,32 @@
+{
+  "name": "qm-XXX",
+  "version": "0.1.0",
+  "description": "YYY",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Use nps!\" && exit 1"
+  },
+  "author": {
+    "name": "qaraluch",
+    "email": "prezenciq@gmail.com",
+    "url": "https://github.com/qaraluch"
+  },
+  "homepage": "https://github.com/qaraluch/qm-XXX",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qaraluch/qm-XXX.git"
+  },
+  "files": [
+    "index.js"
+  ],
+  "devDependencies": {
+    "eslint": "4.19.1",
+    "ava": "0.25.0",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-import": "2.11.0",
+    "eslint-plugin-prettier": "2.6.0",
+    "nps-utils": "1.5.0",
+    "prettier": "1.12.1"
+  }
+}
