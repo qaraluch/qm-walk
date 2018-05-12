@@ -12,10 +12,10 @@
     "email": "prezenciq@gmail.com",
     "url": "https://github.com/qaraluch"
   },
-  "homepage": "https://github.com/qaraluch/qm-XXX",
+  "homepage": "https://github.com/qaraluch/qm-walk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qaraluch/qm-XXX.git"
+    "url": "https://github.com/qaraluch/qm-walk.git"
   },
   "files": [
     "index.js"
