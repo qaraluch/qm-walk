@@ -9,13 +9,13 @@ This module is published in good faith and for learning purpose only. The code i
 ## Installation
 
 ```
-git clone https://github.com/qaraluch/qm-walk.git walk
+npm i -S qm-walk
 ```
 
 ## Usage
 
 ```js
-const { walk, walkProcessed } = require("../walk/index.js");
+const { walk, walkProcessed } = require("qm-walk");
 
 (async () => {
   const files = walk({ path: "some/path" }); // default path === cwd
