@@ -1,4 +1,4 @@
-# walk
+# qm-walk
 
 > File system walker. Promisified, sugar-coated wrapper for npm [klaw](https://github.com/jprichardson/node-klaw) module.
 
@@ -9,7 +9,7 @@ This module is published in good faith and for learning purpose only. The code i
 ## Installation
 
 ```
-git clone https://github.com/qaraluch/qm-walk.git
+git clone https://github.com/qaraluch/qm-walk.git walk
 ```
 
 ## Usage
