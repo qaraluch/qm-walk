@@ -90,7 +90,7 @@ test("error - custom wrapper", async t => {
   );
 });
 
-test.only("filter out items", async t => {
+test("filter out items", async t => {
   const files = await walkProcessed({
     path: testFixtures,
     filterOut: ["thread2"]
