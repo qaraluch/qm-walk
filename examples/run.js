@@ -45,6 +45,7 @@ const mockupPath = "./test/fixtures";
     await Promise.all([
       save__paths,
       save__walk,
+      save__walkItem,
       save__walkProcessed,
       save__walkProcessed,
       save__walkProcessedItem
