@@ -12,7 +12,8 @@ const cwd = process.cwd();
 function walk({ path = cwd } = {}) {
   const pathResolved = nodePath.resolve(cwd, path);
   const itemsToFilter = [".git", "node_modules"];
-  const filterFn = filePath => !RegExp(itemsToFilter[0], "g").test(filePath);
+  const filterFn = filePath =>
+    !itemsToFilter.map(item => RegExp(item, "g").test(filePath)).some(Boolean);
   return new Promise((resolve, reject) => {
     const items = [];
     const walkStream = klaw(pathResolved, {
