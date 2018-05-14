@@ -89,3 +89,15 @@ test("error - custom wrapper", async t => {
     msg
   );
 });
+
+test("filter out items", async t => {
+  const files = await walkProcessed({
+    path: testFixtures,
+    filterOut: ["thread2"]
+  });
+  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const msg = "should return filter out 'thread2' items";
+  const actual = atoms.includes("thread2");
+  const expected = false;
+  t.is(actual, expected, msg);
+});

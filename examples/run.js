@@ -37,8 +37,15 @@ const mockupPath = "./test/fixtures";
       JSON.stringify(walkProcessedOutput[2], null, 2)
     );
 
+    const save__paths = writeFile(
+      "./examples/paths.json",
+      JSON.stringify(walkProcessedOutput.map(item => item.path), null, 2)
+    );
+
     await Promise.all([
+      save__paths,
       save__walk,
+      save__walkItem,
       save__walkProcessed,
       save__walkProcessed,
       save__walkProcessedItem
