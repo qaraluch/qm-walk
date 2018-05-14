@@ -17,13 +17,18 @@ npm i -S qm-walk
 ```js
 const { walk, walkProcessed } = require("qm-walk");
 
+const options = {
+  path: "some/path", //default === cwd
+  filterOut: [".git", "node_modules"] //default
+};
+
 (async () => {
-  const files = walk({ path: "some/path" }); // default path === cwd
+  const files = walk(options); // default path === cwd
   files; // => [ {path: "./foo/bar.txt" stats: {fs.stats}, ... ]
 })();
 
 (async () => {
-  const files = walkProcessed({ path: "some/path" });
+  const files = walkProcessed(options);
   files; // => [ { path, stats, cwd, crown, parent, isFile, name } ]
 })();
 ```
