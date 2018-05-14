@@ -9,11 +9,20 @@ const R = require("ramda");
 
 const cwd = process.cwd();
 
-function walk({ path = cwd } = {}) {
+function resolveOptions(options = {}) {
+  const defaultOptions = {
+    path: cwd,
+    filterOut: [".git", "node_modules"]
+  };
+  const endOptions = Object.assign({}, defaultOptions, options);
+  return endOptions;
+}
+
+function walk(options) {
+  const { path, filterOut } = resolveOptions(options);
   const pathResolved = nodePath.resolve(cwd, path);
-  const itemsToFilter = [".git", "node_modules"];
   const filterFn = filePath =>
-    !itemsToFilter.map(item => RegExp(item, "g").test(filePath)).some(Boolean);
+    !filterOut.map(item => RegExp(item, "g").test(filePath)).some(Boolean);
   return new Promise((resolve, reject) => {
     const items = [];
     const walkStream = klaw(pathResolved, {
@@ -55,8 +64,8 @@ function walk({ path = cwd } = {}) {
   });
 }
 
-async function walkProcessed({ path = cwd } = {}) {
-  const rawOutput = await walk({ path });
+async function walkProcessed(options) {
+  const rawOutput = await walk(resolveOptions(options));
 
   const walkCwdReducer = (acc, next) =>
     acc.length < next.path.length ? acc : next.path;
