@@ -23,12 +23,12 @@ const options = {
 };
 
 (async () => {
-  const files = walk(options); // default path === cwd
+  const files = await walk(options); // default path === cwd
   files; // => [ {path: "./foo/bar.txt" stats: {fs.stats}, ... ]
 })();
 
 (async () => {
-  const files = walkProcessed(options);
+  const files = await walkProcessed(options);
   files; // => [ { path, stats, cwd, crown, parent, isFile, name } ]
 })();
 ```
