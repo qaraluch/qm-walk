@@ -72,12 +72,14 @@ test("processed - more properties", async t => {
   const actual4 = item.hasOwnProperty("parent");
   const actual5 = item.hasOwnProperty("isFile");
   const actual6 = item.hasOwnProperty("name");
+  const actual7 = item.hasOwnProperty("ext");
   const expected = true;
   t.is(actual2, expected, msg2);
   t.is(actual3, expected, msg2);
   t.is(actual4, expected, msg2);
   t.is(actual5, expected, msg2);
   t.is(actual6, expected, msg2);
+  t.is(actual7, expected, msg2);
 });
 
 test("error - custom wrapper", async t => {
