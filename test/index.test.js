@@ -92,6 +92,21 @@ test("error - custom wrapper", async t => {
   );
 });
 
+test("filter out items - default", async t => {
+  const files = await walkProcessed({
+    path: "./"
+  });
+  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const msg = "should return filter out 'node_modules' items";
+  const actual = atoms.includes("node_modules");
+  const expected = false;
+  t.is(actual, expected, msg);
+  const msg2 = "should return filter out '.git' items";
+  const actual2 = atoms.includes(".git");
+  const expected2 = false;
+  t.is(actual, expected, msg);
+});
+
 test("filter out items", async t => {
   const files = await walkProcessed({
     path: testFixtures,
@@ -103,3 +118,6 @@ test("filter out items", async t => {
   const expected = false;
   t.is(actual, expected, msg);
 });
+
+// const tt = files.map(itm => itm.name);
+// console.log("-->", tt);
