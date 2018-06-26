@@ -93,13 +93,18 @@ async function walkProcessed(options) {
     item.name = nodePath.basename(item.path);
     return item;
   };
+  const addExt = item => {
+    item.ext = nodePath.extname(item.path);
+    return item;
+  };
   const xform = R.compose(
     R.filter(removeItemWithCwdOnly(walkCwd)),
     R.map(addCwd(walkCwd)),
     R.map(addCrown(walkCwd)),
     R.map(addParent),
     R.map(addIsFileMapper),
-    R.map(addName)
+    R.map(addName),
+    R.map(addExt)
   );
   const processedTransducer = R.into([], xform);
   return processedTransducer(rawOutput);
