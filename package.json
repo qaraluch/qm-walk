@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "klaw": "2.1.1",
+    "multimatch": "2.1.0",
     "ramda": "0.25.0"
   }
 }
