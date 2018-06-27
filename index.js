@@ -3,6 +3,11 @@ const klaw = require("klaw");
 //[jprichardson/node-klaw: A Node.js file system walker with a Readable stream interface. Extracted from fs-extra.](https://github.com/jprichardson/node-klaw)
 //npm i -S klaw
 
+const multimatch = require("multimatch");
+const matcher = require("matcher");
+// [sindresorhus/multimatch: Extends minimatch.match() with support for multiple patterns](https://github.com/sindresorhus/multimatch)
+// npm i -S multimatch
+
 const R = require("ramda");
 //[Ramda Documentation](http://ramdajs.com/docs/)
 //npm i -S ramda
@@ -18,8 +23,8 @@ function resolveOptions(options = {}) {
   return endOptions;
 }
 
-function walk(options) {
-  const { path, filterOut } = resolveOptions(options);
+function klawWrapper(options) {
+  const { path, filterOut } = options;
   const pathResolved = nodePath.resolve(cwd, path);
   const filterFn = filePath =>
     !filterOut.map(item => RegExp(item, "g").test(filePath)).some(Boolean);
@@ -64,39 +69,44 @@ function walk(options) {
   });
 }
 
-async function walkProcessed(options) {
-  const rawOutput = await walk(resolveOptions(options));
+const removeItemWithCwdOnly = walkCwd => item => item.path !== walkCwd;
 
+const addCwd = walkCwd => item => {
+  item.cwd = walkCwd;
+  return item;
+};
+
+const addCrown = walkCwd => item => {
+  // crown = path - cwd
+  item.crown = item.path.substr(walkCwd.length);
+  return item;
+};
+
+const addParent = item => {
+  item.parent = nodePath.basename(nodePath.dirname(item.path));
+  return item;
+};
+
+const addIsFileMapper = item => {
+  item.isFile = item.stats.isFile;
+  return item;
+};
+
+const addName = item => {
+  item.name = nodePath.basename(item.path);
+  return item;
+};
+
+const addExt = item => {
+  item.ext = nodePath.extname(item.path);
+  return item;
+};
+
+function getExtendedInfo() {
+  const rawOutput = this.result;
   const walkCwdReducer = (acc, next) =>
     acc.length < next.path.length ? acc : next.path;
   const walkCwd = R.reduce(walkCwdReducer, rawOutput[0].path, rawOutput);
-
-  const removeItemWithCwdOnly = walkCwd => item => item.path !== walkCwd;
-  const addCwd = walkCwd => item => {
-    item.cwd = walkCwd;
-    return item;
-  };
-  const addCrown = walkCwd => item => {
-    // crown = path - cwd
-    item.crown = item.path.substr(walkCwd.length);
-    return item;
-  };
-  const addParent = item => {
-    item.parent = nodePath.basename(nodePath.dirname(item.path));
-    return item;
-  };
-  const addIsFileMapper = item => {
-    item.isFile = item.stats.isFile;
-    return item;
-  };
-  const addName = item => {
-    item.name = nodePath.basename(item.path);
-    return item;
-  };
-  const addExt = item => {
-    item.ext = nodePath.extname(item.path);
-    return item;
-  };
   const xform = R.compose(
     R.filter(removeItemWithCwdOnly(walkCwd)),
     R.map(addCwd(walkCwd)),
@@ -107,10 +117,31 @@ async function walkProcessed(options) {
     R.map(addExt)
   );
   const processedTransducer = R.into([], xform);
-  return processedTransducer(rawOutput);
+  this.result = processedTransducer(rawOutput);
+  return this;
 }
 
-module.exports = {
-  walk,
-  walkProcessed
+const methods = {
+  match,
+  getExtendedInfo
+};
+
+function match(glob) {
+  const result = this.result;
+  const res = result.map(itm => itm.name);
+  const re = res.map(itm => matcher.isMatch(itm, glob.join(" ")));
+  // console.log("re ", re);
+}
+
+module.exports = async function walk(options) {
+  const state = Object.assign(
+    Object.create(null),
+    {
+      options: resolveOptions(options)
+    },
+    methods
+  );
+  const doneWalk = await klawWrapper(state.options);
+  state.result = doneWalk;
+  return state;
 };
