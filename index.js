@@ -92,8 +92,10 @@ const addIsFileMapper = item => {
   return item;
 };
 
+const getName = item => nodePath.basename(item.path);
+
 const addName = item => {
-  item.name = nodePath.basename(item.path);
+  item.name = getName(item);
   return item;
 };
 
@@ -128,9 +130,9 @@ const methods = {
 
 function match(glob) {
   const result = this.result;
-  const res = result.map(itm => itm.name);
-  const re = res.map(itm => matcher.isMatch(itm, glob.join(" ")));
-  // console.log("re ", re);
+  const names = result.map(getName);
+  const matched = multimatch(names, glob);
+  return matched;
 }
 
 module.exports = async function walk(options) {
