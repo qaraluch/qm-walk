@@ -1,5 +1,6 @@
 const test = require("ava");
-const { walk, walkProcessed } = require("../index.js");
+const walk = require("../index.js");
+// const { walk, walkProcessed } = require("../index.js");
 
 const testFixtures = "./test/fixtures/";
 const testFixturesErr = testFixtures + "Err/";
@@ -119,5 +120,20 @@ test("filter out items", async t => {
   t.is(actual, expected, msg);
 });
 
-// const tt = files.map(itm => itm.name);
-// console.log("-->", tt);
+test.only("glob - default", async t => {
+  const filesObj = await walk({
+    path: testFixtures
+  });
+  const glob = ["*.info"];
+  const result = filesObj.getExtendedInfo().match(glob);
+  const resultExtensions = [].concat(...result.map(item => item.ext));
+  const msg = "should return result of only .info files";
+  const actual = resultExtensions.every(itm => itm === ".info");
+  const expected = true;
+  t.is(actual, expected, msg);
+});
+
+//TODO: update README
+//TODO: npm publish
+//TODO: update tests
+//TODO: update examples
