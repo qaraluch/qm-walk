@@ -133,7 +133,8 @@ function match(glob) {
   const names = result.map(getName);
   const matchedNames = multimatch(names, glob);
   const walkResultReducer = (acc, next) => {
-    matchedNames.includes(next.name) ? acc.push(next) : acc;
+    const nextName = getName(next);
+    matchedNames.includes(nextName) ? acc.push(next) : acc;
     return acc;
   };
   const matched = R.reduce(walkResultReducer, [], result);

@@ -1,5 +1,6 @@
 const test = require("ava");
 const walk = require("../index.js");
+const pathNode = require("path");
 
 const testFixtures = "./test/fixtures/";
 const testFixturesErr = testFixtures + "Err/";
@@ -118,20 +119,24 @@ test("filter out items", async t => {
 });
 
 test("glob - default", async t => {
-  const filesObj = await walk({
-    path: testFixtures
-  });
+  const options = { path: testFixtures };
+  const [filesObj, filesObjExt] = await Promise.all([
+    walk(options),
+    walk(options)
+  ]);
   const glob = ["*.info"];
   const files = filesObj.match(glob);
-  const filesP = filesObj.getExtendedInfo().match(glob);
-  const resultExtensions = [].concat(...files.map(item => item.ext));
+  const filesExt = filesObjExt.getExtendedInfo().match(glob);
+  const resultExtensions = [].concat(
+    ...files.map(item => pathNode.extname(item.path))
+  );
   const msg = "should return result of only .info files";
   const actual = resultExtensions.every(itm => itm === ".info");
   const expected = true;
   t.is(actual, expected, msg);
-  const resultExtensionsP = [].concat(...filesP.map(item => item.ext));
-  const msg2 = "should return result of only .info files";
-  const actual2 = resultExtensionsP.every(itm => itm === ".info");
+  const resultExtExtensions = [].concat(...filesExt.map(item => item.ext));
+  const msg2 = "should return result of only .info files for extended info.";
+  const actual2 = resultExtExtensions.every(itm => itm === ".info");
   const expected2 = true;
   t.is(actual2, expected2, msg2);
 });
