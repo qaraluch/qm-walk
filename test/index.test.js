@@ -1,5 +1,6 @@
 const test = require("ava");
-const { walk, walkProcessed } = require("../index.js");
+const walk = require("../index.js");
+const pathNode = require("path");
 
 const testFixtures = "./test/fixtures/";
 const testFixturesErr = testFixtures + "Err/";
@@ -7,13 +8,6 @@ const testFixturesErr = testFixtures + "Err/";
 test("walk is function", t => {
   const msg = "should be a function";
   const actual = typeof walk === "function";
-  const expected = true;
-  t.is(actual, expected, msg);
-});
-
-test("walkProcessed is function", t => {
-  const msg = "should be a function";
-  const actual = typeof walkProcessed === "function";
   const expected = true;
   t.is(actual, expected, msg);
 });
@@ -26,7 +20,8 @@ test("return promise", async t => {
 });
 
 test("default", async t => {
-  const files = await walk({ path: testFixtures });
+  const filesObj = await walk({ path: testFixtures });
+  const files = filesObj.result;
   const msg = "should return array length greater than 0";
   const actual = files.length > 0;
   const expected = true;
@@ -42,8 +37,8 @@ test("default", async t => {
 });
 
 test("with stats", async t => {
-  const files = await walk({ path: testFixtures });
-  // console.log("files ", JSON.stringify(files));
+  const filesObj = await walk({ path: testFixtures });
+  const files = filesObj.result;
   const msg2 = "should return object with stats property witch is a object";
   const actual2 = typeof files[0].stats === "object";
   const expected2 = true;
@@ -51,11 +46,12 @@ test("with stats", async t => {
 });
 
 test("processed - remove cwd item", async t => {
-  const [files, filesP] = await Promise.all([
+  const [filesObj, filesPOBJ] = await Promise.all([
     walk({ path: testFixtures }),
-    walkProcessed({ path: testFixtures })
+    walk({ path: testFixtures })
   ]);
-  // console.log("files ", JSON.stringify(files));
+  const files = filesObj.result;
+  const filesP = filesPOBJ.getExtendedInfo().result;
   const msg2 = "should return array shorter by 1 item";
   const actual2 = files.length - filesP.length;
   const expected2 = 1;
@@ -63,7 +59,8 @@ test("processed - remove cwd item", async t => {
 });
 
 test("processed - more properties", async t => {
-  const files = await walkProcessed({ path: testFixtures });
+  const filesObj = await walk({ path: testFixtures });
+  const files = filesObj.getExtendedInfo().result;
   const item = files[3];
   const msg2 =
     "should item object has more properties: 'cwd', 'crown', 'parent', 'isFile', 'name'";
@@ -92,14 +89,54 @@ test("error - custom wrapper", async t => {
   );
 });
 
+test("filter out items - default", async t => {
+  const filesObj = await walk({
+    path: "./"
+  });
+  const files = filesObj.getExtendedInfo().result;
+  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const msg = "should return filter out 'node_modules' items";
+  const actual = atoms.includes("node_modules");
+  const expected = false;
+  t.is(actual, expected, msg);
+  const msg2 = "should return filter out '.git' items";
+  const actual2 = atoms.includes(".git");
+  const expected2 = false;
+  t.is(actual2, expected2, msg2);
+});
+
 test("filter out items", async t => {
-  const files = await walkProcessed({
+  const filesObj = await walk({
     path: testFixtures,
     filterOut: ["thread2"]
   });
+  const files = filesObj.getExtendedInfo().result;
   const atoms = [].concat(...files.map(item => item.path.split("/")));
   const msg = "should return filter out 'thread2' items";
   const actual = atoms.includes("thread2");
   const expected = false;
   t.is(actual, expected, msg);
+});
+
+test("glob - default", async t => {
+  const options = { path: testFixtures };
+  const [filesObj, filesObjExt] = await Promise.all([
+    walk(options),
+    walk(options)
+  ]);
+  const glob = ["*.info"];
+  const files = filesObj.match(glob);
+  const filesExt = filesObjExt.getExtendedInfo().match(glob);
+  const resultExtensions = [].concat(
+    ...files.map(item => pathNode.extname(item.path))
+  );
+  const msg = "should return result of only .info files";
+  const actual = resultExtensions.every(itm => itm === ".info");
+  const expected = true;
+  t.is(actual, expected, msg);
+  const resultExtExtensions = [].concat(...filesExt.map(item => item.ext));
+  const msg2 = "should return result of only .info files for extended info.";
+  const actual2 = resultExtExtensions.every(itm => itm === ".info");
+  const expected2 = true;
+  t.is(actual2, expected2, msg2);
 });

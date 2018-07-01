@@ -15,23 +15,36 @@ npm i -S qm-walk
 ## Usage
 
 ```js
-const { walk, walkProcessed } = require("qm-walk");
+const walk = require("qm-walk");
 
 const options = {
   path: "some/path", //default === cwd
   filterOut: [".git", "node_modules"] //default
 };
 
+// Simple usage:
 (async () => {
-  const files = await walk(options); // default path === cwd
-  files; // => [ {path: "./foo/bar.txt" stats: {fs.stats}, ... ]
+  const filesObj = await walk(options);
+  filesObj.result; // => [ {path: "./foo/bar.txt" stats: {fs.stats}, ... ]
 })();
 
+// Extended info usage:
 (async () => {
-  const files = await walkProcessed(options);
-  files; // => [ { path, stats, cwd, crown, parent, isFile, name, ext } ]
+  const filesObjExtended = await walk(options).getExtendedInfo();
+  filesObjExtended.result; // => [ { path, stats, cwd, crown, parent, isFile, name, ext } ]
+})();
+
+// Glob usage:
+(async () => {
+  const filesMd = await walk(options)
+    .getExtendedInfo()
+    .match(["*.md"]); //  => array of .md files
 })();
 ```
+
+## Glob usage
+
+For glob usage details please see [sindresorhus/multimatch](https://github.com/sindresorhus/multimatch) documentation.
 
 ## Stats object
 
@@ -57,7 +70,6 @@ Stats {
   mtime: Mon, 10 Oct 2011 23:24:11 GMT,
   ctime: Mon, 10 Oct 2011 23:24:11 GMT,
   birthtime: Mon, 10 Oct 2011 23:24:11 GMT }
-  + checks:
   isFile
   isDirectory
   isBlockDevice
