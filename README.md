@@ -29,13 +29,13 @@ const options = {
 
 (async () => {
   const files = await walkProcessed(options);
-  files; // => [ { path, stats, cwd, crown, parent, isFile, name } ]
+  files; // => [ { path, stats, cwd, crown, parent, isFile, name, ext } ]
 })();
 ```
 
-## Node Stats object
+## Stats object
 
-See Node.js [docs](https://nodejs.org/docs/latest/api/fs.html#fs_class_fs_stats).
+Mostly contains node's fs states. See [docs](https://nodejs.org/docs/latest/api/fs.html#fs_class_fs_stats) for more info.
 
 ```
 Stats {
