@@ -140,8 +140,3 @@ test("glob - default", async t => {
   const expected2 = true;
   t.is(actual2, expected2, msg2);
 });
-
-//TODO: update README
-//TODO: npm publish
-//TODO: update tests
-//TODO: update examples
