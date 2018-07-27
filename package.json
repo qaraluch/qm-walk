@@ -1,6 +1,6 @@
 {
   "name": "qm-walk",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "File system walker. Promisified, sugar-coated wrapper for npm klaw module.",
   "main": "index.js",
   "license": "MIT",
