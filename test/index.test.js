@@ -140,3 +140,17 @@ test("glob - default", async t => {
   const expected2 = true;
   t.is(actual2, expected2, msg2);
 });
+
+test("util - preserve default filterOut option", async t => {
+  const filesObj = await walk({
+    path: "./",
+    filterOut: undefined
+  });
+  const files = filesObj.getExtendedInfo().result;
+  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const msg =
+    "should preserve options when passed undefined i.e. use default filterOut option i.e. return filter out 'node_modules' items";
+  const actual = atoms.includes("node_modules");
+  const expected = false;
+  t.is(actual, expected, msg);
+});

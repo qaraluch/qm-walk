@@ -14,15 +14,6 @@ const R = require("ramda");
 
 const cwd = process.cwd();
 
-function resolveOptions(options = {}) {
-  const defaultOptions = {
-    path: cwd,
-    filterOut: [".git", "node_modules"]
-  };
-  const endOptions = Object.assign({}, defaultOptions, options);
-  return endOptions;
-}
-
 function klawWrapper(options) {
   const { path, filterOut } = options;
   const pathResolved = nodePath.resolve(cwd, path);
@@ -141,11 +132,29 @@ function match(glob) {
   return matched;
 }
 
-module.exports = async function walk(options) {
+const getDefaultOptions = () => ({
+  path: cwd,
+  filterOut: [".git", "node_modules"]
+});
+
+function resolveOptions(defaultOptions, ...options) {
+  const optionsMapper = opt =>
+    Object.entries(opt)
+      .filter(([_, value]) => typeof value !== "undefined")
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+  const endOptions = Object.assign(
+    {},
+    defaultOptions,
+    ...options.map(optionsMapper)
+  );
+  return endOptions;
+}
+
+module.exports = async function walk(options = {}) {
   const state = Object.assign(
     Object.create(null),
     {
-      options: resolveOptions(options)
+      options: resolveOptions(getDefaultOptions(), options)
     },
     methods
   );
