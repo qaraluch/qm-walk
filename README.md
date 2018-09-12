@@ -35,16 +35,18 @@ const options = {
 })();
 
 // Glob usage:
+const globOptions = { nocase: true };
 (async () => {
   const filesMd = await walk(options)
     .getExtendedInfo()
-    .match(["*.md"]); //  => array of .md files
+    .match(["*.md"], globOptions); //  => array of .md or .MD files
 })();
 ```
 
 ## Glob usage
 
 For glob usage details please see [sindresorhus/multimatch](https://github.com/sindresorhus/multimatch) documentation.
+You can pass glob options too. See available options on [isaacs/minimatch](https://github.com/isaacs/minimatch#options).
 
 ## Stats object
 
