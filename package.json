@@ -21,16 +21,16 @@
     "index.js"
   ],
   "devDependencies": {
-    "eslint": "4.19.1",
+    "eslint": "5.5.0",
     "ava": "0.25.0",
-    "eslint-config-prettier": "2.9.0",
-    "eslint-plugin-import": "2.11.0",
-    "eslint-plugin-prettier": "2.6.0",
-    "nps-utils": "1.5.0",
-    "prettier": "1.12.1"
+    "eslint-config-prettier": "3.0.1",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-prettier": "2.6.2",
+    "nps-utils": "1.7.0",
+    "prettier": "1.14.2"
   },
   "dependencies": {
-    "klaw": "2.1.1",
+    "klaw": "3.0.0",
     "multimatch": "2.1.0",
     "ramda": "0.25.0"
   }
