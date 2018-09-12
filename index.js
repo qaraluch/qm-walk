@@ -119,10 +119,10 @@ const methods = {
   getExtendedInfo
 };
 
-function match(glob) {
+function match(glob, globOptions) {
   const result = this.result;
   const names = result.map(getName);
-  const matchedNames = multimatch(names, glob);
+  const matchedNames = multimatch(names, glob, globOptions);
   const walkResultReducer = (acc, next) => {
     const nextName = getName(next);
     matchedNames.includes(nextName) ? acc.push(next) : acc;

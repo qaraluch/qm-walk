@@ -3,6 +3,7 @@ const walk = require("../index.js");
 const pathNode = require("path");
 
 const testFixtures = "./test/fixtures/";
+const testFixturesGlob = "./test/fixtures/glob";
 const testFixturesErr = testFixtures + "Err/";
 
 test("walk is function", t => {
@@ -139,6 +140,31 @@ test("glob - default", async t => {
   const actual2 = resultExtExtensions.every(itm => itm === ".info");
   const expected2 = true;
   t.is(actual2, expected2, msg2);
+});
+
+test("glob - support glob options", async t => {
+  const options = { path: testFixturesGlob };
+  const [filesObj, filesObjExt] = await Promise.all([
+    walk(options),
+    walk(options)
+  ]);
+  const globOptions = { nocase: true };
+  const glob = ["*.info"];
+  const files = filesObj.match(glob, globOptions);
+  const filesExt = filesObjExt.getExtendedInfo().match(glob, globOptions);
+  const onlyFileNames = [].concat(
+    ...files.map(item => pathNode.basename(item.path))
+  );
+  const msg = "should return result of only .info files case insensitively";
+  const actual = onlyFileNames;
+  const expected = ["name.info", "name.INFO"];
+  t.deepEqual(actual, expected, msg);
+  const onlyFileExtNames = [].concat(...filesExt.map(item => item.name));
+  const msg2 =
+    "should return result of only .info files for extended info insensitively.";
+  const actual2 = onlyFileExtNames;
+  const expected2 = ["name.info", "name.INFO"];
+  t.deepEqual(actual2, expected2, msg2);
 });
 
 test("util - preserve default filterOut option", async t => {
