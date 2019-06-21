@@ -14,7 +14,7 @@ module.exports = {
     test: {
       default: {
         description: "ava test",
-        script: "ava --verbose"
+        script: "ava --verbose test/index.test.js"
       }
     },
     examples: {

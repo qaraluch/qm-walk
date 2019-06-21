@@ -82,7 +82,9 @@ test("processed - more properties", async t => {
 
 test("error - custom wrapper", async t => {
   const msg = "should throw an error";
-  const error = await t.throws(walk({ path: testFixturesErr }));
+  const error = await t.throwsAsync(() => {
+    return walk({ path: testFixturesErr });
+  });
   t.is(
     error.message.slice(0, 34) + " ...",
     "Sth went wrong with 'walk' module: ...",
