@@ -4,7 +4,6 @@ const klaw = require("klaw");
 //npm i -S klaw
 
 const multimatch = require("multimatch");
-const matcher = require("matcher");
 // [sindresorhus/multimatch: Extends minimatch.match() with support for multiple patterns](https://github.com/sindresorhus/multimatch)
 // npm i -S multimatch
 
