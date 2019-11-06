@@ -1,6 +1,6 @@
 {
   "name": "qm-walk",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "File system walker. Promisified, sugar-coated wrapper for npm klaw module.",
   "main": "index.js",
   "license": "MIT",
@@ -21,12 +21,12 @@
     "index.js"
   ],
   "devDependencies": {
-    "ava": "2.2.0",
-    "eslint": "6.0.1",
-    "eslint-config-prettier": "6.0.0",
-    "eslint-plugin-import": "2.18.0",
-    "eslint-plugin-prettier": "3.1.0",
-    "nps": "^5.9.5",
+    "ava": "2.4.0",
+    "eslint": "6.6.0",
+    "eslint-config-prettier": "6.5.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-prettier": "3.1.1",
+    "nps": "^5.9.8",
     "nps-utils": "^1.7.0",
     "prettier": "1.18.2"
   },
