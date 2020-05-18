@@ -1,3 +1,5 @@
+/*eslint no-prototype-builtins: "off"*/
+// https://eslint.org/docs/rules/no-prototype-builtins
 const test = require("ava");
 const walk = require("../index.js");
 const pathNode = require("path");
@@ -6,21 +8,21 @@ const testFixtures = "./test/fixtures/";
 const testFixturesGlob = "./test/fixtures/glob";
 const testFixturesErr = testFixtures + "Err/";
 
-test("walk is function", t => {
+test("walk is function", (t) => {
   const msg = "should be a function";
   const actual = typeof walk === "function";
   const expected = true;
   t.is(actual, expected, msg);
 });
 
-test("return promise", async t => {
+test("return promise", async (t) => {
   const msg = "should return a promise";
   const actual = typeof (await walk().then) === "function";
   const expected = true;
   t.is(actual, expected, msg);
 });
 
-test("default", async t => {
+test("default", async (t) => {
   const filesObj = await walk({ path: testFixtures });
   const files = filesObj.result;
   const msg = "should return array length greater than 0";
@@ -37,7 +39,7 @@ test("default", async t => {
   t.is(actual2, expected2, msg2);
 });
 
-test("with stats", async t => {
+test("with stats", async (t) => {
   const filesObj = await walk({ path: testFixtures });
   const files = filesObj.result;
   const msg2 = "should return object with stats property witch is a object";
@@ -46,10 +48,10 @@ test("with stats", async t => {
   t.is(actual2, expected2, msg2);
 });
 
-test("processed - remove cwd item", async t => {
+test("processed - remove cwd item", async (t) => {
   const [filesObj, filesPOBJ] = await Promise.all([
     walk({ path: testFixtures }),
-    walk({ path: testFixtures })
+    walk({ path: testFixtures }),
   ]);
   const files = filesObj.result;
   const filesP = filesPOBJ.getExtendedInfo().result;
@@ -59,7 +61,7 @@ test("processed - remove cwd item", async t => {
   t.is(actual2, expected2, msg2);
 });
 
-test("processed - more properties", async t => {
+test("processed - more properties", async (t) => {
   const filesObj = await walk({ path: testFixtures });
   const files = filesObj.getExtendedInfo().result;
   const item = files[3];
@@ -80,7 +82,7 @@ test("processed - more properties", async t => {
   t.is(actual7, expected, msg2);
 });
 
-test("error - custom wrapper", async t => {
+test("error - custom wrapper", async (t) => {
   const msg = "should throw an error";
   const error = await t.throwsAsync(() => {
     return walk({ path: testFixturesErr });
@@ -92,12 +94,12 @@ test("error - custom wrapper", async t => {
   );
 });
 
-test("filter out items - default", async t => {
+test("filter out items - default", async (t) => {
   const filesObj = await walk({
-    path: "./"
+    path: "./",
   });
   const files = filesObj.getExtendedInfo().result;
-  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const atoms = [].concat(...files.map((item) => item.path.split("/")));
   const msg = "should return filter out 'node_modules' items";
   const actual = atoms.includes("node_modules");
   const expected = false;
@@ -108,60 +110,60 @@ test("filter out items - default", async t => {
   t.is(actual2, expected2, msg2);
 });
 
-test("filter out items", async t => {
+test("filter out items", async (t) => {
   const filesObj = await walk({
     path: testFixtures,
-    filterOut: ["thread2"]
+    filterOut: ["thread2"],
   });
   const files = filesObj.getExtendedInfo().result;
-  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const atoms = [].concat(...files.map((item) => item.path.split("/")));
   const msg = "should return filter out 'thread2' items";
   const actual = atoms.includes("thread2");
   const expected = false;
   t.is(actual, expected, msg);
 });
 
-test("glob - default", async t => {
+test("glob - default", async (t) => {
   const options = { path: testFixtures };
   const [filesObj, filesObjExt] = await Promise.all([
     walk(options),
-    walk(options)
+    walk(options),
   ]);
   const glob = ["*.info"];
   const files = filesObj.match(glob);
   const filesExt = filesObjExt.getExtendedInfo().match(glob);
   const resultExtensions = [].concat(
-    ...files.map(item => pathNode.extname(item.path))
+    ...files.map((item) => pathNode.extname(item.path))
   );
   const msg = "should return result of only .info files";
-  const actual = resultExtensions.every(itm => itm === ".info");
+  const actual = resultExtensions.every((itm) => itm === ".info");
   const expected = true;
   t.is(actual, expected, msg);
-  const resultExtExtensions = [].concat(...filesExt.map(item => item.ext));
+  const resultExtExtensions = [].concat(...filesExt.map((item) => item.ext));
   const msg2 = "should return result of only .info files for extended info.";
-  const actual2 = resultExtExtensions.every(itm => itm === ".info");
+  const actual2 = resultExtExtensions.every((itm) => itm === ".info");
   const expected2 = true;
   t.is(actual2, expected2, msg2);
 });
 
-test("glob - support glob options", async t => {
+test("glob - support glob options", async (t) => {
   const options = { path: testFixturesGlob };
   const [filesObj, filesObjExt] = await Promise.all([
     walk(options),
-    walk(options)
+    walk(options),
   ]);
   const globOptions = { nocase: true };
   const glob = ["*.info"];
   const files = filesObj.match(glob, globOptions);
   const filesExt = filesObjExt.getExtendedInfo().match(glob, globOptions);
   const onlyFileNames = [].concat(
-    ...files.map(item => pathNode.basename(item.path))
+    ...files.map((item) => pathNode.basename(item.path))
   );
   const msg = "should return result of only .info files case insensitively";
   const actual = onlyFileNames;
   const expected = ["name.info", "name.INFO"];
   t.deepEqual(actual, expected, msg);
-  const onlyFileExtNames = [].concat(...filesExt.map(item => item.name));
+  const onlyFileExtNames = [].concat(...filesExt.map((item) => item.name));
   const msg2 =
     "should return result of only .info files for extended info insensitively.";
   const actual2 = onlyFileExtNames;
@@ -169,13 +171,13 @@ test("glob - support glob options", async t => {
   t.deepEqual(actual2, expected2, msg2);
 });
 
-test("util - preserve default filterOut option", async t => {
+test("util - preserve default filterOut option", async (t) => {
   const filesObj = await walk({
     path: "./",
-    filterOut: undefined
+    filterOut: undefined,
   });
   const files = filesObj.getExtendedInfo().result;
-  const atoms = [].concat(...files.map(item => item.path.split("/")));
+  const atoms = [].concat(...files.map((item) => item.path.split("/")));
   const msg =
     "should preserve options when passed undefined i.e. use default filterOut option i.e. return filter out 'node_modules' items";
   const actual = atoms.includes("node_modules");
